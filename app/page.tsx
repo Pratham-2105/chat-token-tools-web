@@ -1,7 +1,10 @@
-import Image from "next/image";
+// app/page.tsx
+import React from "react";
+import Link from "next/link";
 
-export default function Home() {
+export default function Page() {
   return (
+<<<<<<< HEAD
     <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
         <Image
@@ -24,79 +27,63 @@ export default function Home() {
             Save and see your changes instantly.
           </li>
         </ol>
+=======
+    <div className="min-h-[calc(100vh-5rem)] relative z-10">
+      {/* Frosted overlay (visual) */}
+      <div className="absolute inset-0 pointer-events-none backdrop-blur-2xl backdrop-saturate-150"></div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center min-h-[calc(100vh-5rem)]">
+        <div className="w-full grid grid-cols-12 gap-6 items-center">
+
+          {/* Sidebar placeholder */}
+          <aside className="col-span-12 lg:col-span-2 xl:col-span-3" aria-hidden>
+            <div className="h-[60vh] hidden lg:flex items-center justify-center select-none opacity-80">
+              <div className="text-center">
+                <p className="text-sm text-gray-700 dark:text-gray-300">Tooling for large-chat workflows</p>
+                <p className="mt-4 text-xs text-gray-600 dark:text-gray-400">Files kept for 1 hour • 30MB max</p>
+              </div>
+            </div>
+          </aside>
+
+          {/* Center content */}
+          <section className="col-span-12 lg:col-span-8 xl:col-span-6 flex items-center justify-center">
+            <div className="w-full max-w-xl bg-white/30 dark:bg-white/5 backdrop-blur-2xl border border-white/20 rounded-2xl shadow-xl p-8 text-center">
+              <h2 className="text-2xl font-bold mb-4">Welcome — choose a tool</h2>
+              <p className="text-sm text-gray-700 dark:text-gray-300 mb-6">
+                Estimate tokens quickly or split large files into model-friendly chunks.
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <Link href="/estimator" className="block py-3 px-4 rounded-lg border border-white/30 bg-white/40 dark:bg-white/10 hover:bg-white/60 dark:hover:bg-white/20 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                  <div className="text-lg font-medium">Token Estimator</div>
+                  <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">Quick counts & model fit</div>
+                </Link>
+
+                <Link href="/chunker" className="block py-3 px-4 rounded-lg border border-transparent hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-gradient-to-br from-indigo-500 to-violet-600 text-white transition-all">
+                  <div className="text-lg font-medium">Chunker</div>
+                  <div className="text-xs text-white/90 mt-1">Split files & download ZIP</div>
+                </Link>
+              </div>
+
+              <p className="mt-6 text-xs text-gray-600 dark:text-gray-400">Built for privacy — files are stored temporarily and auto-deleted.</p>
+            </div>
+          </section>
+
+          {/* Right column placeholder */}
+          <div className="col-span-12 lg:col-span-2 xl:col-span-3 hidden lg:flex items-center justify-center">
+            <div className="text-center text-sm text-gray-700 dark:text-gray-300">
+              <p className="font-medium">Quick links</p>
+              <p className="mt-2 opacity-80">Estimator • Chunker • Docs</p>
+            </div>
+          </div>
+>>>>>>> 5b496ec (Add base layout and landing page)
+
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+      </div>
+
+      {/* Footer */}
+      <footer className="mt-12 text-center text-xs text-gray-600 dark:text-gray-400 pb-8 relative z-10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">© {new Date().getFullYear()} Chat Token Tools — privacy-first • MIT</div>
       </footer>
     </div>
   );
