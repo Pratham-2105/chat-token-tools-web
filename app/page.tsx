@@ -4,30 +4,6 @@ import Link from "next/link";
 
 export default function Page() {
   return (
-<<<<<<< HEAD
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-        width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-=======
     <div className="min-h-[calc(100vh-5rem)] relative z-10">
       {/* Frosted overlay (visual) */}
       <div className="absolute inset-0 pointer-events-none backdrop-blur-2xl backdrop-saturate-150"></div>
@@ -76,7 +52,6 @@ export default function Page() {
               <p className="mt-2 opacity-80">Estimator • Chunker • Docs</p>
             </div>
           </div>
->>>>>>> 5b496ec (Add base layout and landing page)
 
         </div>
       </div>
