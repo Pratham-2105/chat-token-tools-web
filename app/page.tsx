@@ -7,9 +7,8 @@ import { useRouter } from "next/navigation";
 export default function Page() {
   const router = useRouter();
 
-  // Example of programmatic navigation (not required right now)
+  // Programmatic navigation (keeps room for analytics / animation later)
   const goToChunker = () => {
-    // You can add animations, analytics, or pre-checks here later
     router.push("/chunker");
   };
 
@@ -48,7 +47,7 @@ export default function Page() {
                 {/* Token Estimator Button */}
                 <Link
                   href="/estimator"
-                  className="block py-3 px-4 rounded-lg border border-white/30 bg-white/40 dark:bg-white/10 hover:bg-white/60 dark:hover:bg-white/20 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                  className="block py-3 px-4 rounded-lg border border-white/30 bg-white/40 dark:bg-white/10 hover:bg-white/60 dark:hover:bg-white/20 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-400 cursor-pointer"
                 >
                   <div className="text-lg font-medium">Token Estimator</div>
                   <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">
@@ -56,28 +55,16 @@ export default function Page() {
                   </div>
                 </Link>
 
-                {/* Chunker Button — Link OR Programmatic navigation */}
+                {/* Chunker Button — programmatic navigation */}
                 <button
                   onClick={goToChunker}
-                  className="block w-full py-3 px-4 rounded-lg border border-transparent hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-gradient-to-br from-indigo-500 to-violet-600 text-white transition-all"
+                  className="block w-full py-3 px-4 rounded-lg border border-transparent hover:shadow-lg hover:-translate-y-[1px] active:translate-y-[1px] focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-gradient-to-br from-indigo-500 to-violet-600 text-white transition-all cursor-pointer"
                 >
                   <div className="text-lg font-medium">Chunker</div>
                   <div className="text-xs text-white/90 mt-1">
                     Split files & download ZIP
                   </div>
                 </button>
-
-                {/* Alternatively, you can use this simpler Link version instead:
-                <Link
-                  href="/chunker"
-                  className="block py-3 px-4 rounded-lg border border-transparent hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-gradient-to-br from-indigo-500 to-violet-600 text-white transition-all"
-                >
-                  <div className="text-lg font-medium">Chunker</div>
-                  <div className="text-xs text-white/90 mt-1">
-                    Split files & download ZIP
-                  </div>
-                </Link>
-                */}
               </div>
 
               <p className="mt-6 text-xs text-gray-600 dark:text-gray-400">
