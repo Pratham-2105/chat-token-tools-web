@@ -7,25 +7,55 @@ export default function EstimatorPage() {
   const [text, setText] = useState("");
   const [result, setResult] = useState<string | null>(null);
 
-  // Simulate token estimation
+  // --- Updated token estimation logic (matches Java version) ---
+  const estimateTokens = (input: string) => {
+    const cleanText = input.trim();
+    if (!cleanText) return { words: 0, tokens: 0 };
+
+    const words = cleanText.split(/\s+/).length;
+    const chars = cleanText.length;
+
+    // conservative heuristic
+    const tokenByWords = Math.round(words * 1.33);
+    const tokenByChars = Math.round(chars / 4);
+    const tokens = Math.max(tokenByWords, tokenByChars);
+
+    return { words, tokens };
+  };
+
+  // Handle estimation
   const handleEstimate = () => {
     if (!text.trim()) {
-      setResult("Please enter or upload some text first.");
+      setResult("⚠️ Please enter or upload some text first.");
       return;
     }
 
-    // Basic token estimation placeholder: assume ~0.75 tokens per word
-    const words = text.trim().split(/\s+/).length;
-    const tokens = Math.round(words * 0.75);
-
-    setResult(`Approximate tokens: ${tokens} (based on ${words} words)`);
+    const { words, tokens } = estimateTokens(text);
+    setResult(`Words: ${words.toLocaleString()} • Estimated tokens: ${tokens.toLocaleString()}`);
   };
 
   // Load a sample text
   const handleLoadSample = () => {
-    const sample = `Large language models process text as tokens, not words. Tokens can be as short as one character or as long as one word. The Chat Token Tools app helps you estimate token usage for your text before sending it to an API.`;
+    const sample = `Large language models process text as tokens, not words. Tokens can be as short as one character or as long as one word. Chat Token Tools helps estimate token usage before sending text to an API, allowing better cost and context control.`;
     setText(sample);
     setResult(null);
+  };
+
+  // Handle .txt / .docx file upload
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const name = file.name.toLowerCase();
+    if (name.endsWith(".txt")) {
+      const content = await file.text();
+      setText(content);
+      setResult(null);
+    } else if (name.endsWith(".docx")) {
+      setResult("⚠️ .docx upload support coming soon (via mammoth).");
+    } else {
+      setResult("❌ Unsupported file type. Please upload .txt or .docx");
+    }
   };
 
   return (
@@ -34,7 +64,7 @@ export default function EstimatorPage() {
       <div className="absolute inset-0 backdrop-blur-2xl backdrop-saturate-150 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto grid grid-cols-12 gap-6 py-12 relative z-10">
-        {/* Sidebar (placeholder for now) */}
+        {/* Sidebar (temporary placeholder) */}
         <aside className="col-span-12 lg:col-span-3 xl:col-span-2 bg-white/10 dark:bg-white/5 backdrop-blur-xl border border-white/20 rounded-xl shadow-sm p-4 hidden lg:block">
           <h2 className="text-sm font-semibold mb-2">Estimator Sidebar</h2>
           <p className="text-xs text-gray-600 dark:text-gray-400">
@@ -50,7 +80,7 @@ export default function EstimatorPage() {
               <div>
                 <h1 className="text-2xl font-bold">Token Estimator</h1>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                  Paste text or upload a .txt/.docx to estimate approximate tokens for popular models.
+                  Paste text or upload a .txt/.docx to estimate token usage for LLM models.
                 </p>
               </div>
               <div className="hidden sm:block">
@@ -63,7 +93,7 @@ export default function EstimatorPage() {
               </div>
             </header>
 
-            {/* Input section */}
+            {/* Input area */}
             <section className="mt-6 space-y-4">
               <div className="rounded-md border border-white/20 bg-white/10 p-4 flex flex-col">
                 <label className="text-xs font-medium mb-2">Input text</label>
@@ -87,18 +117,7 @@ export default function EstimatorPage() {
                     type="file"
                     accept=".txt,.docx"
                     className="hidden"
-                    onChange={async (e) => {
-                      const file = e.target.files?.[0];
-                      if (!file) return;
-
-                      if (file.name.endsWith(".txt")) {
-                        const content = await file.text();
-                        setText(content);
-                        setResult(null);
-                      } else if (file.name.endsWith(".docx")) {
-                        setResult("⚠️ .docx support coming soon (via mammoth).");
-                      }
-                    }}
+                    onChange={handleFileUpload}
                   />
                 </div>
               </div>
@@ -123,10 +142,10 @@ export default function EstimatorPage() {
               {/* Results */}
               <div className="rounded-md border border-white/20 bg-white/5 p-4">
                 <h3 className="text-sm font-semibold mb-2">Estimated results</h3>
-                <p className="text-xs text-gray-600 dark:text-gray-400">
+                <p className="text-xs text-gray-600 dark:text-gray-400 whitespace-pre-line">
                   {result
                     ? result
-                    : "No data yet — run an estimation to see tokens per model and suggested chunk sizes."}
+                    : "No data yet — run an estimation to see token and word counts."}
                 </p>
               </div>
             </section>
@@ -139,14 +158,14 @@ export default function EstimatorPage() {
             <div>
               <h2 className="text-sm font-semibold mb-2">Model Presets</h2>
               <p className="text-xs text-gray-600 dark:text-gray-400">
-                Select a model to see recommended token limits.
+                View recommended token limits for different models.
               </p>
             </div>
 
             <div>
               <h2 className="text-sm font-semibold mb-2">Estimator Settings</h2>
               <p className="text-xs text-gray-600 dark:text-gray-400">
-                Word/token heuristics, include/exclude whitespace, etc.
+                Word/token ratios, whitespace handling, and model variations.
               </p>
             </div>
           </div>
