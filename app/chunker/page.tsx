@@ -82,6 +82,8 @@ export default function ChunkerPage() {
   const onFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0] ?? null;
     handleFile(f);
+    // reset value so same file can be picked again if needed
+    e.currentTarget.value = "";
   };
 
   const openFilePicker = () => {
@@ -149,17 +151,19 @@ export default function ChunkerPage() {
                 openFilePicker();
               }
             }}
-            className={`h-[70vh] flex flex-col justify-center items-center rounded-2xl border-2 border-dashed ${
+            className={`h-[70vh] flex flex-col justify-center items-center rounded-2xl border-2 border-dashed px-6 py-8 ${
               dragging
                 ? "border-indigo-400 bg-white/30 dark:bg-white/20"
                 : "border-white/30 bg-white/20 dark:bg-white/10"
-            } hover:bg-white/30 dark:hover:bg-white/20 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400`}
+            } hover:bg-white/30 dark:hover:bg-white/20 transition-all cursor-default focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400`}
           >
-            <p className="text-sm text-gray-700 dark:text-gray-300 mb-4 select-none">
+            {/* Top instruction */}
+            <p className="text-sm text-gray-700 dark:text-gray-300 mb-4 select-none text-center">
               {dragging ? "Drop file to upload" : "Drag and drop your file here"}
             </p>
 
-            <div className="flex gap-3 items-center">
+            {/* Button directly under the instruction */}
+            <div className="flex flex-col items-center gap-2">
               <button
                 type="button"
                 onClick={openFilePicker}
@@ -167,6 +171,8 @@ export default function ChunkerPage() {
               >
                 Browse Files
               </button>
+
+              {/* Supported text right beneath the button */}
               <div className="text-xs text-gray-500 dark:text-gray-400">
                 Supported: .txt, .docx • max 30MB
               </div>
@@ -180,7 +186,7 @@ export default function ChunkerPage() {
               onChange={onFileInputChange}
             />
 
-            {/* Feedback section */}
+            {/* Feedback section - placed directly below the controls */}
             <div className="mt-6 w-full px-6">
               {error && (
                 <div className="text-sm text-red-500 bg-red-50 dark:bg-red-900/30 rounded-md p-3">
@@ -245,6 +251,26 @@ export default function ChunkerPage() {
                   )}
                 </div>
               )}
+
+              {/* Remove file action (only show when a file is selected) */}
+
+              {fileMeta && (
+                <div className="mt-3 flex justify-center">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFileMeta(null);
+                      setError(null);
+                      if (fileInputRef.current) fileInputRef.current.value = "";
+              }}
+                className="text-xs text-red-500 hover:text-red-600 active:text-red-700 flex items-center gap-2 px-2 py-1 rounded cursor-pointer transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
+                aria-label="Remove selected file">
+                    <span className="text-sm">❌</span>
+                    <span>Remove file</span>
+                  </button>
+                </div>
+            )}
+
 
               {!error && !fileMeta && (
                 <div className="text-xs text-gray-500 dark:text-gray-400">
