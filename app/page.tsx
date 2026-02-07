@@ -27,10 +27,6 @@ export default function Home() {
   const [topicTags, setTopicTags] = useState("");
   const [sourceRange, setSourceRange] = useState("");
   const [model, setModel] = useState(DEFAULT_MODEL);
-  const [rawChat, setRawChat] = useState("");
-  const [maxTokens, setMaxTokens] = useState("");
-  const [splitChunks, setSplitChunks] = useState<SplitChunk[]>([]);
-  const [splitError, setSplitError] = useState("");
 
   useEffect(() => {
     const initialSummaries = loadSummaries();
@@ -80,41 +76,6 @@ export default function Home() {
     setSummaries(updatedSummaries);
   };
 
-  const handleSplitChat = async () => {
-    if (!rawChat.trim()) {
-      setSplitError("Add chat content before splitting.");
-      return;
-    }
-    setSplitError("");
-    const response = await fetch("/api/split", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        text: rawChat,
-        model,
-        maxTokens: maxTokens ? Number(maxTokens) : undefined,
-      }),
-    });
-
-    if (!response.ok) {
-      setSplitError("Unable to split chat. Please try again.");
-      return;
-    }
-
-    const payload = (await response.json()) as { chunks: SplitChunk[] };
-    setSplitChunks(payload.chunks);
-  };
-
-  const handleDownloadChunk = (chunk: SplitChunk) => {
-    const blob = new Blob([chunk.text], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement("a");
-    anchor.href = url;
-    anchor.download = chunk.filename;
-    anchor.click();
-    URL.revokeObjectURL(url);
-  };
-
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-10 px-6 py-12">
@@ -161,111 +122,6 @@ export default function Home() {
               Stored key: <span className="font-mono">{maskedKey}</span>
             </p>
           ) : null}
-        </section>
-
-        <section className="rounded-2xl border border-slate-800 bg-slate-900/50 p-6 shadow-lg shadow-slate-950/40">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h2 className="text-xl font-semibold text-white">
-                Chat Splitter
-              </h2>
-              <p className="mt-1 text-sm text-slate-400">
-                Split long chats into context-sized files you can upload
-                individually for summarization.
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-5 grid gap-4 md:grid-cols-2">
-            <label className="space-y-2 text-sm text-slate-300">
-              Target model
-              <select
-                className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100"
-                value={model}
-                onChange={(event) => setModel(event.target.value)}
-              >
-                <option value="gpt-4.1-mini">gpt-4.1-mini</option>
-                <option value="gpt-4.1">gpt-4.1</option>
-                <option value="gpt-4o-mini">gpt-4o-mini</option>
-                <option value="gpt-4o">gpt-4o</option>
-              </select>
-            </label>
-            <label className="space-y-2 text-sm text-slate-300">
-              Max context tokens (optional)
-              <input
-                className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-600"
-                placeholder="Defaults to model context limit"
-                value={maxTokens}
-                onChange={(event) => setMaxTokens(event.target.value)}
-              />
-            </label>
-            <label className="space-y-2 text-sm text-slate-300 md:col-span-2">
-              Chat transcript
-              <textarea
-                className="min-h-[160px] w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-600"
-                placeholder="Paste the full chat transcript to split..."
-                value={rawChat}
-                onChange={(event) => setRawChat(event.target.value)}
-              />
-            </label>
-          </div>
-          <div className="mt-5 flex flex-wrap items-center gap-3">
-            <button
-              className="rounded-lg bg-indigo-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-400"
-              type="button"
-              onClick={handleSplitChat}
-            >
-              Split into files
-            </button>
-            {splitError ? (
-              <span className="text-xs text-rose-400">{splitError}</span>
-            ) : null}
-            <p className="text-xs text-slate-500">
-              Files are created locally in your browser. No content is sent
-              anywhere except the local split endpoint.
-            </p>
-          </div>
-
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
-            {splitChunks.length === 0 ? (
-              <div className="rounded-xl border border-dashed border-slate-700 p-6 text-sm text-slate-400">
-                No split files yet. Add a transcript and split to generate
-                files.
-              </div>
-            ) : (
-              splitChunks.map((chunk) => (
-                <article
-                  key={chunk.id}
-                  className="flex h-full flex-col gap-3 rounded-xl border border-slate-800 bg-slate-950/40 p-4"
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p className="text-xs uppercase tracking-widest text-slate-500">
-                        File {chunk.id}
-                      </p>
-                      <h3 className="text-sm font-semibold text-slate-100">
-                        {chunk.filename}
-                      </h3>
-                    </div>
-                    <span className="text-xs text-slate-500">
-                      ~{chunk.approxTokens} tokens
-                    </span>
-                  </div>
-                  <p className="text-sm text-slate-300">
-                    {chunk.text.slice(0, 220)}
-                    {chunk.text.length > 220 ? "…" : ""}
-                  </p>
-                  <button
-                    className="mt-auto rounded-lg border border-slate-700 px-3 py-1.5 text-xs font-semibold text-slate-200 transition hover:border-indigo-400 hover:text-white"
-                    type="button"
-                    onClick={() => handleDownloadChunk(chunk)}
-                  >
-                    Download file
-                  </button>
-                </article>
-              ))
-            )}
-          </div>
         </section>
 
         <section className="rounded-2xl border border-slate-800 bg-slate-900/50 p-6 shadow-lg shadow-slate-950/40">
