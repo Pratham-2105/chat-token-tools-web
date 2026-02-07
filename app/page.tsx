@@ -11,6 +11,13 @@ import {
   saveApiKey,
 } from "./summaryStore";
 
+type SplitChunk = {
+  id: number;
+  filename: string;
+  text: string;
+  approxTokens: number;
+};
+
 const DEFAULT_MODEL = "gpt-4.1-mini";
 
 export default function Home() {
